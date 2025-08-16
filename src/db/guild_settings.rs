@@ -26,7 +26,10 @@ pub enum Relation {}
 impl ActiveModelBehavior for ActiveModel {}
 
 /// Create an entry in the guild settings table
-pub(crate) async fn create_entry(db: &DbConn, guild_id: impl AsRef<str>) -> Result<(), anyhow::Error> {
+pub(crate) async fn create_entry(
+    db: &DbConn,
+    guild_id: impl AsRef<str>,
+) -> Result<(), anyhow::Error> {
     // Use the active value types
     use sea_orm::ActiveValue::*;
 

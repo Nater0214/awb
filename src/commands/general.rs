@@ -1,8 +1,8 @@
 use anyhow::{Context as _, anyhow};
 use poise::{Command, command};
 
-use crate::settings::get_context_settings;
 use crate::localize_message;
+use crate::settings::get_context_settings;
 
 use super::{Context, Data, Error, Result};
 
