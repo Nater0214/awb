@@ -8,7 +8,7 @@ use serenity::all::{
     CreateSelectMenuOption,
 };
 
-use crate::{db, localize_message, settings::get_context_settings};
+use crate::{db, localization::Language, localize_message, settings::get_context_settings};
 
 use super::{Context, Data, Error, Result};
 
@@ -147,7 +147,20 @@ pub(super) async fn user(ctx: Context<'_>) -> Result {
 
                     // Get the value of the setting
                     let setting_value = match selection.as_str() {
-                        "language" => context_settings.language.to_string(),
+                        "language" => match context_settings.language {
+                            Language::English => localize_message!(
+                                "settings.language.names.en",
+                                &context_settings.language
+                            )
+                            .await
+                            .context("Failed to localize message")?,
+                            Language::Spanish => localize_message!(
+                                "settings.language.names.es",
+                                &context_settings.language
+                            )
+                            .await
+                            .context("Failed to localize message")?,
+                        },
                         _ => unreachable!("Invalid selection"),
                     };
 
@@ -334,12 +347,12 @@ pub(super) async fn user(ctx: Context<'_>) -> Result {
                                             CreateInteractionResponseFollowup::default()
                                                 .content(
                                                     localize_message!(
-                                            "command.settings.user.response.edit.success",
-                                            &context_settings.language,
-                                            &setting_name
-                                        )
-                                        .await
-                                        .context("Failed to localize message")?,
+                                                        "command.settings.user.response.edit.success",
+                                                        &context_settings.language,
+                                                        &setting_name
+                                                    )
+                                                    .await
+                                                    .context("Failed to localize message")?,
                                                 )
                                                 .ephemeral(true),
                                         )
