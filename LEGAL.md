@@ -1,5 +1,10 @@
+LEGAL
+=====
+Copyright (c) 2025 Nater0214
+
 Definitions
 -----------
+
 - **Original Author**: Nater0214, the original author of this bot
 - **Derivative Author(s)**: The author of any derivative of this bot
 - **Original Codebase**: The repository in which the original code for the bot is stored (https://github.com/Nater0214/awb)
