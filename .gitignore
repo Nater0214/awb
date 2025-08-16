@@ -1,11 +1,11 @@
 # Ignore built stuff
-/target
+target/
 
 # Ignore dev stuff
+.vscode/
+db.sqlite
 dev.txt
 token.txt
-db.sqlite
-.vscode
 
 # Ignore Docker stuff
 .dockerignore
