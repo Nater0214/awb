@@ -1,0 +1,13 @@
+# Ignore built stuff
+/target
+
+# Ignore dev stuff
+dev.txt
+token.txt
+db.sqlite
+.vscode
+
+# Ignore Docker stuff
+.dockerignore
+docker-compose.yml
+Dockerfile

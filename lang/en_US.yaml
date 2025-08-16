@@ -1,0 +1,31 @@
+command:
+  hello:
+    response: "Hello {}"
+  whereareyou:
+    response:
+      server: "I am in the {} server in the {} channel"
+      dm: "I am in a DM channel"
+  whoareyou:
+    response: "Hi! I am the Alpha Wolf Bot version `{}`"
+  settings:
+    user:
+      button:
+        view:
+          label: "View"
+        edit:
+          label: "Edit"
+      response:
+        initial: "Here are the user settings"
+        view: "The value of your `{}` setting is `{}`"
+        error:
+          noselection: "No setting was selected"
+        edit:
+          initial: "Changing the value of the `{}` setting"
+          success: "The value of your `{}` setting was changed"
+
+settings:
+  language:
+    label: "Language"
+    names:
+      en: "English"
+      es: "Spanish"
