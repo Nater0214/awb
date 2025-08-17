@@ -1,5 +1,6 @@
 use std::{env, path, sync::OnceLock};
 
+use anyhow::Context;
 use db::setup_schema;
 use poise::{Framework, FrameworkError};
 use sea_orm::{ConnectOptions, Database};
@@ -9,6 +10,8 @@ use tracing::{Level, event};
 use tracing_subscriber::prelude::*;
 use utils::prelude::*;
 
+use crate::settings::get_context_settings;
+
 mod commands;
 mod db;
 mod localization;
@@ -17,6 +20,50 @@ mod utils;
 
 /// Whether the bot is in development mode
 pub(crate) static DEVELOPMENT_MODE: OnceLock<bool> = OnceLock::new();
+
+async fn error_handler(
+    error: FrameworkError<'_, commands::Data, commands::Error>,
+) -> anyhow::Result<()> {
+    // Match the error type
+    match error {
+        FrameworkError::Command { error, ctx, .. } => {
+            event!(
+                Level::ERROR,
+                "Error result returned from command `{}`: {:#}",
+                ctx.command().name,
+                error
+            );
+            let context_settings = get_context_settings(&ctx, &ctx.data().db)
+                .await
+                .context("Failed to get context settings")?;
+            ctx.say(
+                localize_message!(
+                    "error.command.result.response",
+                    &context_settings.language,
+                    error.to_string()
+                )
+                .await
+                .context("Failed to localize message")?,
+            )
+            .await
+            .context("An additional error occurred responding to the error")?;
+        }
+        FrameworkError::CommandPanic { payload, ctx, .. } => {
+            event!(
+                Level::ERROR,
+                "Panic in command `{}`: {}",
+                ctx.command().name,
+                payload.unwrap_or("No payload".to_owned()),
+            );
+        }
+        other_error => {
+            event!(Level::ERROR, "Error in the framework: {}", other_error);
+        }
+    };
+
+    // Return ok
+    Ok(())
+}
 
 /// The main function
 #[tokio::main]
@@ -77,27 +124,10 @@ async fn main() {
             commands: commands::get_all_commands(),
             on_error: |error| {
                 Box::pin(async move {
-                    match error {
-                        FrameworkError::Command { error, ctx, .. } => {
-                            event!(
-                                Level::ERROR,
-                                "Error result returned from command `{}`: {:#}",
-                                ctx.command().name,
-                                error
-                            )
-                        }
-                        FrameworkError::CommandPanic { payload, ctx, .. } => {
-                            event!(
-                                Level::ERROR,
-                                "Panic in command `{}`: {}",
-                                ctx.command().name,
-                                payload.unwrap_or("No payload".to_owned()),
-                            )
-                        }
-                        other_error => {
-                            event!(Level::ERROR, "Error in the framework: {}", other_error)
-                        }
-                    }
+                    error_handler(error)
+                        .await
+                        .context("An additional error occurred in handling the error")
+                        .expect_log("An additional error occurred in handling the error");
                 })
             },
             ..Default::default()

@@ -18,7 +18,7 @@ pub(crate) type Context<'a> = poise::Context<'a, Data, Error>;
 /// The data for commands
 #[derive(Debug, Clone)]
 pub(crate) struct Data {
-    pub(self) db: DatabaseConnection,
+    pub(crate) db: DatabaseConnection,
     pub(self) menu_selections: DashMap<(MessageId, UserId), String>,
 }
 
