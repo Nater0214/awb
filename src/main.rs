@@ -1,8 +1,8 @@
-use std::{path, sync::OnceLock};
+use std::{env, path, sync::OnceLock};
 
 use db::setup_schema;
 use poise::{Framework, FrameworkError};
-use sea_orm::Database;
+use sea_orm::{ConnectOptions, Database};
 use serenity::all::{ClientBuilder, GatewayIntents};
 use tokio::fs;
 use tracing::{Level, event};
@@ -46,32 +46,22 @@ async fn main() {
             .expect_log("Failed to change log level");
     }
 
+    // Get the path to the token file
+    let token_path = env::var_os("TOKEN_PATH").unwrap_or("token.txt".into());
+
     // Get the token
-    let token = match fs::read_to_string("token.txt").await {
-        Ok(token) => token,
-        Err(_) => {
-            println!("Please enter your token:");
-            let mut token = String::new();
-            std::io::stdin().read_line(&mut token).unwrap();
-            fs::write("token.txt", token.trim()).await.unwrap();
-            token.trim().to_string()
-        }
-    };
+    let token = fs::read_to_string(token_path)
+        .await
+        .expect_log("Could not read token file");
     event!(Level::INFO, "Token loaded");
 
+    // Get the database url
+    let database_url = env::var_os("DATABASE_URL").unwrap_or("sqlite::memory:".into());
+
     // Connect to the database
-    if !fs::try_exists(path::Path::new("db.sqlite"))
+    let db = Database::connect(ConnectOptions::new(database_url.to_string_lossy()))
         .await
-        .expect_log("Could not determine if database file exists")
-    {
-        match fs::File::create("db.sqlite").await {
-            Ok(_) => (),
-            Err(_) => panic!("Failed to create database file"),
-        }
-    }
-    let db = Database::connect("sqlite:db.sqlite")
-        .await
-        .expect_log("Failed to connect to sqlite database");
+        .expect_log("Failed to connect to database");
 
     // Setup the database schema
     setup_schema(&db)
