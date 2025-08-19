@@ -3,6 +3,7 @@ target/
 
 # Ignore dev stuff
 .vscode/
+.VSCodeCounter/
 db.sqlite
 dev.txt
 token.txt
