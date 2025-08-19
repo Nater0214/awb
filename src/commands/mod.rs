@@ -4,7 +4,6 @@ use serenity::all::{MessageId, UserId};
 
 pub(self) mod general;
 pub(self) mod settings;
-pub(self) mod shadowbox;
 
 /// The error type for commands
 pub(crate) type Error = anyhow::Error;
@@ -36,6 +35,5 @@ pub(crate) fn get_all_commands() -> Vec<poise::Command<Data, Error>> {
         .into_iter()
         .chain(general::get_all_commands())
         .chain(settings::get_all_commands())
-        .chain(shadowbox::get_all_commands())
         .collect()
 }
