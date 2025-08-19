@@ -49,12 +49,27 @@ async fn error_handler(
             .context("An additional error occurred responding to the error")?;
         }
         FrameworkError::CommandPanic { payload, ctx, .. } => {
+            let payload = payload.unwrap_or("No payload".to_owned());
             event!(
                 Level::ERROR,
                 "Panic in command `{}`: {}",
                 ctx.command().name,
-                payload.unwrap_or("No payload".to_owned()),
+                &payload,
             );
+            let context_settings = get_context_settings(&ctx, &ctx.data().db)
+                .await
+                .context("Failed to get context settings")?;
+            ctx.say(
+                localize_message!(
+                    "error.command.panic.response",
+                    &context_settings.language,
+                    &payload
+                )
+                .await
+                .context("Failed to localize message")?,
+            )
+            .await
+            .context("An additional error occurred responding to the error")?;
         }
         other_error => {
             event!(Level::ERROR, "Error in the framework: {}", other_error);
