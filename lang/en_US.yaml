@@ -23,6 +23,15 @@ command:
           initial: "Changing the value of the `{}` setting"
           success: "The value of your `{}` setting was changed"
 
+error:
+  command:
+    result:
+      response: "Oops! That resulted in an error:\n`{}`"
+    panic:
+      response: "Oops! That caused me to panic:\n`{}`"
+  other:
+    response: "Oops! Something went wrong:\n`{}`"
+
 settings:
   language:
     label: "Language"

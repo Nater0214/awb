@@ -1,5 +1,7 @@
 use std::str::FromStr;
 
+use strum::EnumIter;
+
 use crate::db;
 
 #[derive(Debug, Clone)]
@@ -21,7 +23,7 @@ impl std::fmt::Display for LanguageParseError {
 
 impl std::error::Error for LanguageParseError {}
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, EnumIter)]
 pub(crate) enum Language {
     English,
     Spanish,
@@ -30,8 +32,8 @@ pub(crate) enum Language {
 impl Language {
     pub(crate) fn as_str(&self) -> &'static str {
         match self {
-            Self::English => "en-US",
-            Self::Spanish => "es-419",
+            Self::English => "en_US",
+            Self::Spanish => "es_419",
         }
     }
 }

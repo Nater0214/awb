@@ -1,7 +1,8 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, env, path::PathBuf};
 
 use anyhow::Context as _;
 use serde_yaml::Value;
+use strum::IntoEnumIterator;
 use tokio::{fs, sync::OnceCell};
 
 pub(crate) use language::Language;
@@ -20,30 +21,21 @@ static TRANSLATIONS: OnceCell<TranslationsMap> = OnceCell::const_new();
 async fn get_translations() -> &'static TranslationsMap {
     TRANSLATIONS
         .get_or_init(|| async {
-            // Combine language files
+            // Get the translations directory
+            let translations_dir =
+                PathBuf::from(env::var_os("TRANSLATIONS_DIR").unwrap_or("./lang".into()));
+
+            // Create translations map
             let mut translations = TranslationsMap::new();
 
-            // Load English
-            fs::read("./lang/en_US.yaml")
-                .await
-                .ok()
-                .and_then(|content| {
-                    serde_yaml::from_slice(content.as_slice())
-                        .ok()
-                        .map(|value| (Language::English, value))
-                })
-                .and_then(|(language, value)| translations.insert(language, value));
-
-            // Load Spanish
-            fs::read("./lang/es_419.yaml")
-                .await
-                .ok()
-                .and_then(|content| {
-                    serde_yaml::from_slice(content.as_slice())
-                        .ok()
-                        .map(|value| (Language::Spanish, value))
-                })
-                .and_then(|(language, value)| translations.insert(language, value));
+            // Load languages
+            for language in Language::iter() {
+                fs::read(translations_dir.join([language.as_str(), ".yaml"].concat()))
+                    .await
+                    .ok()
+                    .and_then(|content| serde_yaml::from_slice(content.as_slice()).ok())
+                    .and_then(|value| translations.insert(language, value));
+            }
 
             translations
         })

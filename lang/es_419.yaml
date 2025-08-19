@@ -5,6 +5,8 @@ command:
     response:
       server: "Estoy en el {} servidor en el {} canal"
       dm: "Estoy en un canal DM"
+  whoareyou:
+    response: "Hola! Soy el bot Alpha Wolf versión `{}`"
   settings:
     user:
       button:
@@ -20,6 +22,15 @@ command:
         edit:
           initial: "Cambiando el valor del ajuste `{}`"
           success: "El valor de su ajuste `{}` fue cambiado"
+
+error:
+  command:
+    result:
+      response: "¡Ups! ¡Eso resultó en un error:\n`{}`!"
+    panic:
+      response: "¡Ups! ¡Eso causó mi panic:\n`{}`"
+  other:
+    response: "¡Ups! ¡Algo salió mal:\n`{}`"
 
 settings:
   language:
