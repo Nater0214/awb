@@ -1,6 +1,6 @@
 [package]
 name = "awb"
-version = "2.0.0-alpha"
+version = "2.1.0-alpha"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 
@@ -10,31 +10,40 @@ async-recursion = "1.1.1"
 dashmap = "6.1.0"
 poise = "0.6.1"
 serde_yaml = "0.9.34"
-strum = { version = "0.27.2", features = ["derive", "strum_macros"] }
 tracing = { version = "0.1.41", features = ["async-await"] }
 tracing-subscriber = "0.3.19"
 
+[dependencies.strum]
+version = "0.27.2"
+features = ["derive", "strum_macros"]
+
+[dependencies.chrono]
+version = "0.4.41"
+default-features = false
+features = ["std", "alloc"]
+
 [dependencies.sea-orm]
 version = "1.1.14"
+default-features = false
 features = [
+    "macros",
+    "runtime-tokio-rustls",
     "sqlx-sqlite",
     "sqlx-postgres",
     "sqlx-mysql",
-    "runtime-tokio-rustls",
-    "macros",
+    "with-chrono",
 ]
-default-features = false
 
 [dependencies.serenity]
 version = "0.12.4"
 features = [
     "builder",
     "client",
+    "collector",
     "gateway",
+    "framework",
     "model",
     "utils",
-    "collector",
-    "framework",
 ]
 
 [dependencies.tokio]

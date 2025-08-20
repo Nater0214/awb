@@ -22,6 +22,14 @@ command:
         edit:
           initial: "Changing the value of the `{}` setting"
           success: "The value of your `{}` setting was changed"
+  quote:
+    save:
+      response: "I saved [that message]({}) in the quotebook"
+    view:
+      preview: "- {} said \"{}\" in [this message]({})"
+      response:
+        previews: "I found these quotes:\n{}"
+        empty: "I couldn't find any quotes that match those filters"
 
 error:
   command:

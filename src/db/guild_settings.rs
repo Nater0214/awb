@@ -1,4 +1,4 @@
-use anyhow::Context;
+use anyhow::Context as _;
 use sea_orm::prelude::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, EnumIter, DeriveActiveEnum)]

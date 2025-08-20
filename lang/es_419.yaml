@@ -22,6 +22,14 @@ command:
         edit:
           initial: "Cambiando el valor del ajuste `{}`"
           success: "El valor de su ajuste `{}` fue cambiado"
+  quote:
+    save:
+      response: "Guardé [ese mensaje]({}) en el libro de citas"
+    view:
+      preview: "- {} dijo \"{}\" en [este mensaje]({})"
+      response:
+        previews: "He encontrado estas citas:\n{}"
+        empty: "No he encontrado ninguna cita que coincida con esos filtros"
 
 error:
   command:

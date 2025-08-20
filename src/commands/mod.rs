@@ -3,6 +3,7 @@ use sea_orm::DatabaseConnection;
 use serenity::all::{MessageId, UserId};
 
 pub(self) mod general;
+pub(self) mod quote;
 pub(self) mod settings;
 
 /// The error type for commands
@@ -34,6 +35,7 @@ pub(crate) fn get_all_commands() -> Vec<poise::Command<Data, Error>> {
     vec![]
         .into_iter()
         .chain(general::get_all_commands())
+        .chain(quote::get_all_commands())
         .chain(settings::get_all_commands())
         .collect()
 }
