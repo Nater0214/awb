@@ -1,6 +1,6 @@
 use anyhow::{Context, anyhow};
 use chrono::NaiveDateTime;
-use sea_orm::{QuerySelect as _, prelude::*};
+use sea_orm::{QueryOrder as _, QuerySelect as _, prelude::*};
 
 #[derive(Debug, Clone, PartialEq, DeriveEntityModel)]
 #[sea_orm(table_name = "quotebook")]
@@ -59,7 +59,8 @@ pub(crate) struct EntryFilters {
     _message_id: Option<String>,
     _guild_id: Option<String>,
     _author_id: Option<String>,
-    _datetime: Option<NaiveDateTime>,
+    _datetime_start: Option<NaiveDateTime>,
+    _datetime_end: Option<NaiveDateTime>,
     _limit: Option<u8>,
 }
 
@@ -70,7 +71,8 @@ impl EntryFilters {
             _message_id: None,
             _guild_id: None,
             _author_id: None,
-            _datetime: None,
+            _datetime_start: None,
+            _datetime_end: None,
             _limit: None,
         }
     }
@@ -90,8 +92,13 @@ impl EntryFilters {
         self
     }
 
-    pub(crate) fn datetime(mut self, datetime: NaiveDateTime) -> Self {
-        self._datetime = Some(datetime);
+    pub(crate) fn datetime_start(mut self, datetime: NaiveDateTime) -> Self {
+        self._datetime_start = Some(datetime);
+        self
+    }
+
+    pub(crate) fn datetime_end(mut self, datetime: NaiveDateTime) -> Self {
+        self._datetime_end = Some(datetime);
         self
     }
 
@@ -135,8 +142,11 @@ pub(crate) async fn get_entries(
             if let Some(author_id) = &filters._author_id {
                 query = query.filter(AuthorId.eq(author_id));
             }
-            if let Some(datetime) = &filters._datetime {
-                query = query.filter(Datetime.eq(datetime.to_owned()));
+            if let Some(datetime_start) = &filters._datetime_start {
+                query = query.filter(Datetime.gte(datetime_start.to_owned()));
+            }
+            if let Some(datetime_end) = &filters._datetime_end {
+                query = query.filter(Datetime.lte(datetime_end.to_owned()));
             }
         };
     } else {
@@ -149,6 +159,9 @@ pub(crate) async fn get_entries(
     } else {
         query = query.limit(5);
     }
+
+    // Order by the date
+    query = query.order_by_asc(Datetime);
 
     // Execute the query
     let entries = query

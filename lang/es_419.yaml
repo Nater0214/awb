@@ -30,6 +30,7 @@ command:
       response:
         previews: "He encontrado estas citas:\n{}"
         empty: "No he encontrado ninguna cita que coincida con esos filtros"
+        # baddate: "No he entendido la fecha que ingresaste"
 
 error:
   command:

@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use anyhow::{Context as _, anyhow};
 use poise::{Command, command};
-use serenity::all::{GetMessages, MessageId};
+use serenity::all::{GetMessages, Member, MessageId};
 
 use crate::{db, localize_message, settings::get_context_settings};
 
@@ -48,7 +48,10 @@ pub(super) async fn save(
 
     // Get the last message sent if no message was provided
     let message = if let Some(message) = message {
-        message
+        ctx.channel_id()
+            .message(ctx, message)
+            .await
+            .context("Could not get message")?
     } else {
         ctx.channel_id()
             .messages(ctx, GetMessages::default().limit(2))
@@ -57,20 +60,19 @@ pub(super) async fn save(
             .nth(1)
             .ok_or(anyhow!("No messages found"))
             .context("No messages found")?
-            .id
-            .clone()
+            .to_owned()
     };
 
     // Create the database entry
     db::quotebook::create_entry(
         &ctx.data().db,
-        message.to_string(),
+        message.id.to_string(),
         ctx.guild_id()
             .ok_or(anyhow!("No guild ID found"))
             .context("No guild ID found")?
             .to_string(),
-        ctx.author().id.to_string(),
-        chrono::Utc::now().naive_utc(),
+        message.author.id.to_string(),
+        message.id.created_at().naive_utc(),
     )
     .await
     .context("Failed to create entry in quotebook table")?;
@@ -80,7 +82,7 @@ pub(super) async fn save(
         localize_message!(
             "command.quote.save.response",
             &context_settings.language,
-            message.link(ctx.channel_id(), ctx.guild_id())
+            message.link()
         )
         .await
         .context("Failed to localize message")?,
@@ -150,16 +152,37 @@ async fn create_quote_preview(
 )]
 pub(super) async fn view(
     ctx: Context<'_>,
+
     #[name_localized("en-US", "limit")]
     #[name_localized("es-419", "limite")]
     #[description_localized("en-US", "The number of quotes to view")]
     #[description_localized("es-419", "El número de citas a ver")]
     limit: Option<u8>,
+
+    #[name_localized("en-US", "author")]
+    #[name_localized("es-419", "autor")]
+    #[description_localized("en-US", "The author of the quotes to view")]
+    #[description_localized("es-419", "El autor de las citas a ver")]
+    author: Option<Member>,
+    // #[name_localized("en-US", "start_date")]
+    // #[name_localized("es-419", "fecha_inicio")]
+    // #[description_localized("en-US", "The start date of the quotes to view")]
+    // #[description_localized("es-419", "La fecha de inicio de las citas a ver")]
+    // start_date: Option<NaiveDateTime>,
+
+    // #[name_localized("en-US", "end_date")]
+    // #[name_localized("es-419", "fecha_fin")]
+    // #[description_localized("en-US", "The end date of the quotes to view")]
+    // #[description_localized("es-419", "La fecha de fin de las citas a ver")]
+    // end_date: Option<NaiveDateTime>,
 ) -> Result {
     // Get the context settings
     let context_settings = get_context_settings(&ctx, &ctx.data().db)
         .await
         .context("Failed to get context settings")?;
+
+    // Defer the response
+    ctx.defer().await.context("Failed to defer response")?;
 
     // Create the filters struct
     let mut filters = db::quotebook::EntryFilters::new();
@@ -173,6 +196,15 @@ pub(super) async fn view(
     if let Some(limit) = limit {
         filters = filters.limit(limit);
     }
+    if let Some(author) = author {
+        filters = filters.author_id(author.user.id.to_string());
+    }
+    // if let Some(start_date) = start_date {
+    //     filters = filters.datetime_start(start_date);
+    // }
+    // if let Some(end_date) = end_date {
+    //     filters = filters.datetime_end(end_date);
+    // }
 
     // Get the entries from the database
     let entries = db::quotebook::get_entries(&ctx.data().db, filters)
