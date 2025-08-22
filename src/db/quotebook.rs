@@ -137,20 +137,21 @@ pub(crate) async fn get_entries(
     // Add each filter if it exists
     if let Some(guild_id) = &filters._guild_id {
         query = query.filter(GuildId.eq(guild_id));
-        if let Some(message_id) = &filters._message_id {
-            query = query.filter(MessageId.eq(message_id));
-            if let Some(author_id) = &filters._author_id {
-                query = query.filter(AuthorId.eq(author_id));
-            }
-            if let Some(datetime_start) = &filters._datetime_start {
-                query = query.filter(Datetime.gte(datetime_start.to_owned()));
-            }
-            if let Some(datetime_end) = &filters._datetime_end {
-                query = query.filter(Datetime.lte(datetime_end.to_owned()));
-            }
-        };
     } else {
         return Err(anyhow!("No guild ID provided")).context("No guild ID provided");
+    }
+    if let Some(message_id) = &filters._message_id {
+        query = query.filter(MessageId.eq(message_id));
+    } else {
+        if let Some(author_id) = &filters._author_id {
+            query = query.filter(AuthorId.eq(author_id));
+        }
+        if let Some(datetime_start) = &filters._datetime_start {
+            query = query.filter(Datetime.gte(datetime_start.to_owned()));
+        }
+        if let Some(datetime_end) = &filters._datetime_end {
+            query = query.filter(Datetime.lte(datetime_end.to_owned()));
+        }
     }
 
     // Add the limit
