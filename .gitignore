@@ -9,6 +9,4 @@ dev.txt
 token.txt
 
 # Ignore Docker stuff
-.dockerignore
 docker-compose.yml
-Dockerfile

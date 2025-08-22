@@ -1,0 +1,17 @@
+# Ignore unnecessary dev stuff
+db.sqlite
+dev.txt
+rustfmt.toml
+token.txt
+target/
+
+# Ignore git stuff
+.git/
+.gitignore
+
+# Ignore reading stuff
+LEGAL.md
+LICENSE
+LICENSE.Apache-2.0.md
+LICENSE.MIT.md
+README.md
