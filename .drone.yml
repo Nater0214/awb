@@ -1,0 +1,13 @@
+kind: pipeline
+name: default
+type: docker
+
+steps:
+  - name: build
+    image: docker:dind
+    commands:
+      - "docker build -t awb ."
+
+trigger:
+  event:
+    - push
