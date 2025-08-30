@@ -2,6 +2,7 @@
 target/
 
 # Ignore dev stuff
+.env
 .vscode/
 .VSCodeCounter/
 db.sqlite

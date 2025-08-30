@@ -2,12 +2,28 @@ kind: pipeline
 name: default
 type: docker
 
-steps:
-  - name: build
-    image: docker:dind
-    commands:
-      - "docker build -t awb ."
-
 trigger:
   event:
     - push
+
+volumes:
+  - name: varrun
+    temp: {}
+
+steps:
+  - name: build
+    image: docker:cli
+    volumes:
+      - name: varrun
+        path: /var/run
+    commands:
+      - "until [ -e /var/run/docker.sock ]; do echo Waiting for docker...; sleep 1; done"
+      - "docker buildx build . -t awb"
+
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: varrun
+        path: /var/run
