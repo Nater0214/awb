@@ -3,6 +3,8 @@ target/
 
 # Ignore dev stuff
 .env
+secrets.env
+.drone.local.yml
 .vscode/
 .VSCodeCounter/
 db.sqlite

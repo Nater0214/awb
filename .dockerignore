@@ -4,6 +4,11 @@ dev.txt
 rustfmt.toml
 token.txt
 target/
+.env
+secrets.env
+.drone.local.yml
+.vscode/
+.VSCodeCounter/
 
 # Ignore git stuff
 .git/
