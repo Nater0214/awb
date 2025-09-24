@@ -1,6 +1,7 @@
 use std::{env, path, sync::OnceLock};
 
-use anyhow::Context;
+use anyhow::Context as _;
+use db::setup_schema;
 use poise::{Framework, FrameworkError};
 use sea_orm::{ConnectOptions, Database};
 use serenity::all::{ClientBuilder, GatewayIntents};
@@ -8,7 +9,6 @@ use tokio::fs;
 use tracing::{Level, event};
 use tracing_subscriber::prelude::*;
 
-use crate::db::setup_schema;
 use crate::settings::get_context_settings;
 use crate::utils::expect_log::ExpectLog as _;
 
