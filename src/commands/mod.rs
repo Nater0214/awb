@@ -2,9 +2,9 @@ use dashmap::DashMap;
 use sea_orm::DatabaseConnection;
 use serenity::all::{MessageId, UserId};
 
-pub(self) mod general;
-pub(self) mod quote;
-pub(self) mod settings;
+mod general;
+mod quote;
+mod settings;
 
 /// The error type for commands
 pub(crate) type Error = anyhow::Error;

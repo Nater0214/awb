@@ -56,8 +56,7 @@ pub(super) async fn save(
         ctx.channel_id()
             .messages(ctx, GetMessages::default().limit(2))
             .await?
-            .iter()
-            .nth(1)
+            .get(1)
             .ok_or(anyhow!("No messages found"))
             .context("No messages found")?
             .to_owned()
@@ -95,6 +94,7 @@ pub(super) async fn save(
 }
 
 /// Create a preview for a quote
+#[allow(clippy::needless_question_mark)]
 async fn create_quote_preview(
     ctx: Context<'_>,
     entry: db::quotebook::Model,

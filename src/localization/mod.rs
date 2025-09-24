@@ -89,7 +89,7 @@ pub(crate) async fn localize_message(
     // Get the correct translations set
     let translations = get_translations()
         .await
-        .get(&language)
+        .get(language)
         .ok_or(LocalizationError::UnsupportedLanguage(language.to_owned()))
         .context("Could not get translations")?;
 
@@ -124,10 +124,10 @@ pub(crate) async fn localize_message(
 #[macro_export]
 macro_rules! localize_message {
     ($key:expr, $lang:expr $(,)?) => {
-        crate::localization::localize_message($key, $lang, &[])
+        $crate::localization::localize_message($key, $lang, &[])
     };
     ($key:expr, $lang:expr, $($args:expr),* $(,)?) => {
-        crate::localization::localize_message($key, $lang, &[$(&$args),*])
+        $crate::localization::localize_message($key, $lang, &[$(&$args),*])
     };
 }
 
