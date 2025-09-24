@@ -26,7 +26,7 @@ command:
     save:
       response: "I saved [that message]({}) in the quotebook"
     view:
-      preview: "- {} said \"{}\" in [this message]({})"
+      preview: "- Quote number {}: {} said \"{}\" in [this message]({})"
       response:
         previews: "I found these quotes:\n{}"
         empty: "I couldn't find any quotes that match those filters"

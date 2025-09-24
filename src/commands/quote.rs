@@ -105,6 +105,9 @@ async fn create_quote_preview(
         .context("Failed to get context settings")?
         .language;
 
+    // Get the quote id
+    let quote_id = entry.id;
+
     // Get the quote message
     let message = ctx
         .channel_id()
@@ -121,6 +124,20 @@ async fn create_quote_preview(
     // Get the quote message content
     let message_content = message.content.clone();
 
+    // Only get first line of message if multi-line
+    let message_content = if message_content.lines().count() > 1 {
+        format!(
+            "{}...",
+            &message_content
+                .lines()
+                .next()
+                .ok_or(anyhow!("No lines found"))?
+                .to_owned()
+        )
+    } else {
+        message_content
+    };
+
     // Shorten message content if needed
     let message_content = if message_content.chars().count() > 100 {
         format!("{}...", &message_content[..100])
@@ -135,9 +152,10 @@ async fn create_quote_preview(
     Ok(localize_message!(
         "command.quote.view.preview",
         &language,
+        quote_id,
         author_name,
-        &message_content,
-        &message_link
+        message_content,
+        message_link
     )
     .await
     .context("Failed to localize message")?)

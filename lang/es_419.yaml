@@ -26,7 +26,7 @@ command:
     save:
       response: "Guardé [ese mensaje]({}) en el libro de citas"
     view:
-      preview: "- {} dijo \"{}\" en [este mensaje]({})"
+      preview: "- Cita numero {}: {} dijo \"{}\" en [este mensaje]({})"
       response:
         previews: "He encontrado estas citas:\n{}"
         empty: "No he encontrado ninguna cita que coincida con esos filtros"

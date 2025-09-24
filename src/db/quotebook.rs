@@ -162,7 +162,7 @@ pub(crate) async fn get_entries(
     }
 
     // Order by the date
-    query = query.order_by_asc(Datetime);
+    query = query.order_by_desc(Datetime);
 
     // Execute the query
     let entries = query
