@@ -1,5 +1,6 @@
 Alpha Wolf Bot v2
 =================
+[![Build Status](https://drone.nater0214.com/api/badges/Nater0214/awb/status.svg)](https://drone.nater0214.com/Nater0214/awb)
 
 A cool Discord bot
 

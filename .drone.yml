@@ -1,29 +1,40 @@
 kind: pipeline
-name: default
 type: docker
-
-trigger:
-  event:
-    - push
-
-volumes:
-  - name: varrun
-    temp: {}
+name: default
 
 steps:
+  # Build the docker image and upload it to the registry
   - name: build
-    image: docker:cli
-    volumes:
-      - name: varrun
-        path: /var/run
+    image: plugins/docker
+    settings:
+      repo: docker.nater0214.com/awb
+      tags: latest
+      cache_from: docker.nater0214.com/awb
+      registry: docker.nater0214.com
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+
+  # Tell portainer to use the new image by calling the webhook
+  - name: deploy
+    image: curlimages/curl
     commands:
-      - "until [ -e /var/run/docker.sock ]; do echo Waiting for docker...; sleep 1; done"
-      - "docker buildx build . -t awb"
+      - curl -X POST -d {} $PORTAINER_WEBHOOK
+    environment:
+      PORTAINER_WEBHOOK:
+        from_secret: portainer_webhook
+    when:
+      branch:
+        - main
+      event:
+        - push
+      status:
+        - success
+    depends_on:
+      - build
 
 services:
   - name: docker
     image: docker:dind
     privileged: true
-    volumes:
-      - name: varrun
-        path: /var/run
