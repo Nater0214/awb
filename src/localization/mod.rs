@@ -80,7 +80,7 @@ impl std::error::Error for LocalizationError {
 pub(crate) async fn localize_message(
     translation_key: impl AsRef<str>,
     language: impl AsRef<Language>,
-    args: &[impl ToString],
+    args: &[&(dyn ToString + Send + Sync)],
 ) -> Result<String, anyhow::Error> {
     // Convert arguments
     let translation_key = translation_key.as_ref().parse::<TranslationKey>()?;
@@ -124,10 +124,10 @@ pub(crate) async fn localize_message(
 #[macro_export]
 macro_rules! localize_message {
     ($key:expr, $lang:expr $(,)?) => {
-        crate::localization::localize_message($key, $lang, &[] as &[&str])
+        crate::localization::localize_message($key, $lang, &[])
     };
     ($key:expr, $lang:expr, $($args:expr),* $(,)?) => {
-        crate::localization::localize_message($key, $lang, &[$($args),*])
+        crate::localization::localize_message($key, $lang, &[$(&$args),*])
     };
 }
 
