@@ -23,8 +23,9 @@ impl std::fmt::Display for LanguageParseError {
 
 impl std::error::Error for LanguageParseError {}
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, EnumIter)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Hash, EnumIter)]
 pub(crate) enum Language {
+    #[default]
     English,
     Spanish,
 }
@@ -35,12 +36,6 @@ impl Language {
             Self::English => "en_US",
             Self::Spanish => "es_419",
         }
-    }
-}
-
-impl Default for Language {
-    fn default() -> Self {
-        Self::English
     }
 }
 
