@@ -8,7 +8,7 @@ WORKDIR /app
 ######################
 FROM chef AS preparer
 COPY Cargo.toml Cargo.lock ./
-COPY . .
+RUN mkdir src && touch src/main.rs
 RUN cargo chef prepare --recipe-path recipe.json
 
 ###################
