@@ -8,9 +8,12 @@ steps:
     image: plugins/docker
     settings:
       repo: docker.nater0214.com/awb
-      tags: latest
-      cache_from: docker.nater0214.com/awb
-      cache_to: docker.nater0214.com/awb
+      tags:
+        - latest
+        - buildcache
+      cache_from: docker.nater0214.com/awb:buildcache
+      build_args:
+        - BUILDKIT_INLINE_CACHE=1
       registry: docker.nater0214.com
       username:
         from_secret: docker_username
