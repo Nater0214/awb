@@ -10,6 +10,7 @@ steps:
       repo: docker.nater0214.com/awb
       tags: latest
       cache_from: docker.nater0214.com/awb
+      cache_to: docker.nater0214.com/awb
       registry: docker.nater0214.com
       username:
         from_secret: docker_username
