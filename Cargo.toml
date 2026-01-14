@@ -7,23 +7,25 @@ license = "MIT OR Apache-2.0"
 [dependencies]
 anyhow = "1.0.100"
 async-recursion = "1.1.1"
+async-stream = "0.3.6"
 dashmap = "6.1.0"
 poise = "0.6.1"
-serde_yaml = "0.9.34"
-tracing = { version = "0.1.41", features = ["async-await"] }
-tracing-subscriber = "0.3.20"
+serde_yaml = "0.9.34-deprecated"
+tokio-stream = "0.1.18"
+tracing = { version = "0.1.44", features = ["async-await"] }
+tracing-subscriber = "0.3.22"
 
 [dependencies.strum]
 version = "0.27.2"
 features = ["derive", "strum_macros"]
 
 [dependencies.chrono]
-version = "0.4.41"
+version = "0.4.42"
 default-features = false
 features = ["std", "alloc"]
 
 [dependencies.sea-orm]
-version = "1.1.14"
+version = "1.1.19"
 default-features = false
 features = [
     "macros",
@@ -35,7 +37,7 @@ features = [
 ]
 
 [dependencies.serenity]
-version = "0.12.4"
+version = "0.12.5"
 features = [
     "builder",
     "client",
@@ -47,5 +49,5 @@ features = [
 ]
 
 [dependencies.tokio]
-version = "1.47.1"
+version = "1.49.0"
 features = ["fs", "io-std", "rt-multi-thread"]
