@@ -22,6 +22,13 @@ command:
         edit:
           initial: "Changing the value of the `{}` setting"
           success: "The value of your `{}` setting was changed"
+  purge:
+    from:
+      response:
+        pre:
+          all: "Purging all messages from {}"
+          limit: "Purging at most {} messages from {}"
+        post: "Purged {} messages from {}"
   quote:
     save:
       response: "I saved [that message]({}) in the quotebook"
@@ -30,7 +37,6 @@ command:
       response:
         previews: "I found these quotes:\n{}"
         empty: "I couldn't find any quotes that match those filters"
-        # baddate: "I couldn't understand the date you input"
 
 error:
   command:

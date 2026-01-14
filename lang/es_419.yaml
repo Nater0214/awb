@@ -3,10 +3,10 @@ command:
     response: "Hola {}"
   whereareyou:
     response:
-      server: "Estoy en el {} servidor en el {} canal"
-      dm: "Estoy en un canal DM"
+      server: "Estoy en el servidor {} en el canal {}"
+      dm: "Estoy en un canal de mensaje directo"
   whoareyou:
-    response: "¡Hola! Soy el bot Alpha Wolf versión `{}`"
+    response: "¡Hola! Soy el Alpha Wolf Bot versión `{}`"
   settings:
     user:
       button:
@@ -16,28 +16,34 @@ command:
           label: "Editar"
       response:
         initial: "Aquí están los ajustes de usuario"
-        view: "El valor de su ajuste `{}` es `{}`"
+        view: "El valor de tu ajuste `{}` es `{}`"
         error:
-          noselection: "No se seleccionó ninguna ajuste"
+          noselection: "No se seleccionó ningún ajuste"
         edit:
           initial: "Cambiando el valor del ajuste `{}`"
-          success: "El valor de su ajuste `{}` fue cambiado"
+          success: "El valor de tu ajuste `{}` fue cambiado"
+  purge:
+    from:
+      response:
+        pre:
+          all: "Purgando todos los mensajes de {}"
+          limit: "Purgando un máximo de {} mensajes de {}"
+        post: "Se han purgado {} mensajes de {}"
   quote:
     save:
       response: "Guardé [ese mensaje]({}) en el libro de citas"
     view:
-      preview: "- Cita numero {}: {} dijo \"{}\" en [este mensaje]({})"
+      preview: "- Cita número {}: {} dijo \"{}\" en [este mensaje]({})"
       response:
-        previews: "He encontrado estas citas:\n{}"
-        empty: "No he encontrado ninguna cita que coincida con esos filtros"
-        # baddate: "No he entendido la fecha que ingresaste"
+        previews: "Encontré estas citas:\n{}"
+        empty: "No encontré ninguna cita que coincida con esos filtros"
 
 error:
   command:
     result:
       response: "¡Ups! Eso resultó en un error:\n`{}`"
     panic:
-      response: "¡Ups! Eso causó mi panic:\n`{}`"
+      response: "¡Ups! Eso causó que entrara en pánico:\n`{}`"
   other:
     response: "¡Ups! Algo salió mal:\n`{}`"
 
