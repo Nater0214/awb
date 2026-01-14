@@ -25,7 +25,7 @@ pub(super) async fn hello(ctx: Context<'_>) -> Result {
         localize_message!(
             "command.hello.response",
             &context_settings.language,
-            ctx.author().name.clone()
+            ctx.author().display_name()
         )
         .await
         .context("Failed to localize message")?,

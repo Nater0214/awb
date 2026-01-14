@@ -1,3 +1,4 @@
+pub mod chunked_messages;
 pub mod expect_log;
 
 #[allow(unused)]

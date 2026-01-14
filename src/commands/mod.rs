@@ -3,6 +3,7 @@ use sea_orm::DatabaseConnection;
 use serenity::all::{MessageId, UserId};
 
 mod general;
+mod purge;
 mod quote;
 mod settings;
 
@@ -35,6 +36,7 @@ pub(crate) fn get_all_commands() -> Vec<poise::Command<Data, Error>> {
     vec![]
         .into_iter()
         .chain(general::get_all_commands())
+        .chain(purge::get_all_commands())
         .chain(quote::get_all_commands())
         .chain(settings::get_all_commands())
         .collect()
